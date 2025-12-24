@@ -23,5 +23,9 @@ RUN chmod +x wisecow.sh
 # Expose the communication port
 EXPOSE 4499
 
+# Healthcheck to verify the service is running
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD nc -z localhost 4499 || exit 1
+
 # Run the script
 CMD ["./wisecow.sh"]
