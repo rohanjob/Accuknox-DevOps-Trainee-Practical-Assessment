@@ -1,0 +1,31 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: wisecow-zero-trust
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: wisecow
+  process:
+    matchDirectories:
+    - dir: /usr/games/ # fortune and cowsay are usually here
+      recursive: true
+    matchPaths:
+    - path: /usr/bin/bash
+    - path: /usr/bin/nc
+    - path: /app/wisecow.sh
+    action: Allow
+  file:
+    matchDirectories:
+    - dir: /app/
+      recursive: true
+    - dir: /etc/
+      recursive: true
+    action: Allow
+  network:
+    matchProtocols:
+    - protocol: tcp
+      port: 4499
+    action: Allow
+  action: Block # Default action for everything else
