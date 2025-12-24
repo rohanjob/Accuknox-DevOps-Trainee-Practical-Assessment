@@ -27,7 +27,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./PS1
+          file: ./PS1/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/wisecow:latest
 
@@ -47,7 +48,7 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-          kubectl apply -f k8s/ingress.yaml
+          kubectl apply -f PS1/k8s/deployment.yaml
+          kubectl apply -f PS1/k8s/service.yaml
+          kubectl apply -f PS1/k8s/ingress.yaml
           kubectl set image deployment/wisecow-deployment wisecow=${{ secrets.DOCKERHUB_USERNAME }}/wisecow:latest
